@@ -91,9 +91,9 @@ module.exports = {
           var str = fs.readFileSync(filePath, "utf8");
 
           var regex = /(?<=bundle.).+/;
-
+            console.log("hey",str,"hi")
           var r = str.match(regex);
-
+        
           var out = str.replace(r[0], replacement + "';");
 
           fs.writeFileSync(filePath, out);
