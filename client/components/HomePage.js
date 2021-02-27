@@ -188,7 +188,7 @@ function HomePage(props) {
               component="h2"
               gutterBottom
             >
-              G_Drive design for Folder and File Striucture.
+              G_Drive design for Folder and File Structure.
             </Typography>
           </div>
         </div>
