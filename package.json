@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=development nodemon ./bin/www",
+    "dev": "webpack-dev-server --mode   --open",
+    "start": "./bin/www",
+    "build": "webpack --config ./webpack.prod.config.js --mode production",
     "start:prod": "NODE_ENV=production nodemon ./bin/www",
-    "clean": "rimraf dist/bundle/",
-    "build": "webpack --config ./webpack.prod.config.js --mode production"
+    "clean": "rimraf dist/bundle/"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
