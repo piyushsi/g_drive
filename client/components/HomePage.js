@@ -79,7 +79,12 @@ function HomePage(props) {
   };
 
   const handleClose = (mes) => {
-    mes == "post" ? createNew() : "";
+    if (mes == "post") {
+      createNew();
+    }
+    if (mes == "delete") {
+      deleteDir();
+    }
     setOpen(false);
   };
   const createNew = () => {
@@ -149,10 +154,16 @@ function HomePage(props) {
     );
   };
 
+  const deleteDir = () => {
+    Axios.post("/api/v1/delete", {
+      id,
+    }).then((res) => console.log(res));
+    checkHome();
+  };
+
   useEffect(() => {
     checkHome();
   }, []);
-  console.log(data);
 
   return (
     <div className={classes.root}>
@@ -177,7 +188,7 @@ function HomePage(props) {
               component="h2"
               gutterBottom
             >
-              G_Drive design for Folder and File Striucture.
+              G_Drive design for Folder and File Structure.
             </Typography>
           </div>
         </div>
@@ -260,9 +271,17 @@ function HomePage(props) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
+            <Button
+              autoFocus
+              onClick={() => handleClose("delete")}
+              color="secondary"
+            >
+              delete {selected}
+            </Button>
             <Button autoFocus onClick={handleClose} color="primary">
               Cancel
             </Button>
+
             <Button
               onClick={() => handleClose("post")}
               color="primary"
