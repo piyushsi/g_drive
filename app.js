@@ -47,12 +47,9 @@ mongoose.set("useFindAndModify", false);
 mongoose.set("useNewUrlParser", true);
 
 // connect to mongodb
-mongoose.connect(
-  "mongodb+srv://piyushsi:piyushsi@conduit.acuxw.mongodb.net/directory?retryWrites=true&w=majority",
-  function (err) {
-    console.log("mongodb connected ?", err ? false : true);
-  }
-);
+mongoose.connect("mongodb://localhost:27017/g_drive_", function (err) {
+  console.log("mongodb connected ?", err ? false : true);
+});
 
 // webpack
 if (process.env.NODE_ENV === "development") {
