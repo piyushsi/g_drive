@@ -51,6 +51,7 @@ router.post("/create", (req, res, next) => {
 });
 
 router.get("/", (req, res) => {
+  // 10 level population
   Directory.findOne({ ishome: true })
     .populate({
       path: "directory",
@@ -92,6 +93,92 @@ router.get("/", (req, res) => {
             sucess: true,
           });
     });
+});
+
+// Delete a folder
+router.post("/delete", (req, res, next) => {
+  const { id } = req.body;
+  Directory.findByIdAndDelete(id, (err, deleted) => {
+    Directory.find({ directory: { $in: [id] } }, (err, parentDir) => {
+      console.log(parentDir);
+      Directory.updateOne({ id: parentDir.id }, { $pull: { directory: [id] } });
+      res.json({ sucess: err ? false : true });
+    });
+  });
+});
+
+// size a folder
+router.post("/size", (req, res, next) => {
+  const { id } = req.body;
+  // 10 level population
+  Directory.findByIdAndDelete({ id })
+    .populate({
+      path: "directory",
+      select: "size",
+      populate: {
+        path: "directory",
+        select: "size",
+        populate: {
+          path: "directory",
+          select: "size",
+          populate: {
+            path: "directory",
+            select: "size",
+            populate: {
+              path: "directory",
+              select: "size",
+              populate: {
+                path: "directory",
+                select: "size",
+                populate: {
+                  path: "directory",
+                  select: "size",
+                  populate: {
+                    path: "directory",
+                    select: "size",
+                    populate: {
+                      path: "directory",
+                      select: "size",
+                      populate: {
+                        path: "directory",
+                        select: "size",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+    .exec((err, files) => {
+      res.json({ success: !err ? true : false, data: err ? "" : files });
+    });
+});
+
+// Search by filename
+router.post("/search", (req, res, next) => {
+  const { name } = req.body;
+  Directory.findOne({ name, isFolder: false }, (err, deleted) => {
+    res.json({ success: !err ? true : false });
+  });
+});
+
+// Search for files with name “File1” and format = PNG
+router.post("/find", (req, res, next) => {
+  const { name, format } = req.body;
+  Directory.findOne({ name, format, isFolder: false }, (err, deleted) => {
+    res.json({ success: !err ? true : false });
+  });
+});
+
+// Get list of all files reverse sorted by date
+router.post("/sort", (req, res, next) => {
+  const { name } = req.body;
+  Directory.find({ isFolder: false }).sort({ datefield: -1 }, (err, files) => {
+    res.json({ success: !err ? true : false, data: err ? false : files });
+  });
 });
 
 module.exports = router;
