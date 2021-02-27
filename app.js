@@ -13,6 +13,14 @@ var apiRouter = require("./routes/api");
 require("dotenv").config();
 var app = express();
 
+const gzipOptions = {
+  enableBrotli: true,
+  orderPreference: ["br", "gz"],
+  setHeaders: function (res, path) {
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+  },
+};
+
 app.use(helmet());
 
 // view engine setup
