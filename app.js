@@ -56,7 +56,7 @@ mongoose.set("useNewUrlParser", true);
 
 // connect to mongodb
 mongoose.connect(
-  "mongodb+srv://piyushsi:piyushsi@conduit.acuxw.mongodb.net/directory?retryWrites=true&w=majority",
+  process.env.mongo,
   function (err) {
     console.log("mongodb connected ?", err ? false : true);
   }
