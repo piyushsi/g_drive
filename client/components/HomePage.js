@@ -19,6 +19,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const drawerWidth = 240;
 
@@ -67,6 +68,7 @@ function HomePage(props) {
   const [size, setSize] = useState(`0Kb`);
   const [format, setFormat] = useState(`noFormat`);
   const [id, setId] = useState(null);
+  const [loader, setLoader] = useState(false);
 
   const handleChange = (event) => {
     setType(event.target.value);
@@ -88,15 +90,19 @@ function HomePage(props) {
     setOpen(false);
   };
   const createNew = () => {
+    setLoader(true);
     Axios.post("/api/v1/create", {
       name,
       format,
       size,
       id,
       type,
-    }).then((res) => checkHome());
+    }).then((res) => {
+      checkHome();
+    });
   };
   const createHome = () => {
+    setLoader(true);
     Axios.post("/api/v1/create", {
       name: "/",
       format: "folder",
@@ -106,7 +112,11 @@ function HomePage(props) {
   };
 
   const checkHome = () => {
-    Axios.get("/api/v1").then((res) => setData(res.data));
+    setLoader(true);
+    Axios.get("/api/v1").then((res) => {
+      setData(res.data);
+      setLoader(false);
+    });
   };
   var uid = 0;
   const treeData = (obj, isChild) => {
@@ -157,9 +167,11 @@ function HomePage(props) {
   };
 
   const deleteDir = () => {
+    setLoader(true);
     Axios.post("/api/v1/delete", {
       id,
-    }).then((res) => checkHome());
+    }).then((res) => console.log(res));
+    checkHome();
   };
 
   useEffect(() => {
@@ -194,7 +206,14 @@ function HomePage(props) {
           </div>
         </div>
       </main>
-      <main>
+      {loader ? (
+        <div className={classes.center}>
+          <CircularProgress />
+        </div>
+      ) : (
+        ""
+      )}
+      <main style={{ visibility: !loader ? "visible" : "hidden" }}>
         {data.sucess ? (
           <div className={classes.center}>
             <button onClick={() => createHome()}>Create Root</button>
@@ -220,79 +239,79 @@ function HomePage(props) {
         ) : (
           ""
         )}
-      </main>
-      <div>
-        <Dialog
-          fullScreen={fullScreen}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
-        >
-          <DialogTitle id="responsive-dialog-title">
-            {`Add SubFolder or SubFiles for ${selected}`}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <TextField
-                id="standard-basic"
-                label="Name"
-                onChange={(e) => setName(e.target.value)}
-              />
-              <br />
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={type}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={"file"}>File</MenuItem>
-                  <MenuItem value={"folder"}>Folder</MenuItem>
-                </Select>
-              </FormControl>{" "}
-              <br />
-              {type == "file" ? (
-                <>
-                  <TextField
-                    id="standard-basic"
-                    label="Size"
-                    onChange={(e) => setSize(e.target.value)}
-                  />{" "}
-                  <br />
-                  <TextField
-                    id="standard-basic"
-                    label="Format"
-                    onChange={(e) => setFormat(e.target.value)}
-                  />
-                </>
-              ) : (
-                ""
-              )}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              autoFocus
-              onClick={() => handleClose("delete")}
-              color="secondary"
-            >
-              delete {selected}
-            </Button>
-            <Button autoFocus onClick={handleClose} color="primary">
-              Cancel
-            </Button>
+        <div>
+          <Dialog
+            fullScreen={fullScreen}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="responsive-dialog-title">
+              {`Add SubFolder or SubFiles for ${selected}`}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                <TextField
+                  id="standard-basic"
+                  label="Name"
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <br />
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={type}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"file"}>File</MenuItem>
+                    <MenuItem value={"folder"}>Folder</MenuItem>
+                  </Select>
+                </FormControl>{" "}
+                <br />
+                {type == "file" ? (
+                  <>
+                    <TextField
+                      id="standard-basic"
+                      label="Size"
+                      onChange={(e) => setSize(e.target.value)}
+                    />{" "}
+                    <br />
+                    <TextField
+                      id="standard-basic"
+                      label="Format"
+                      onChange={(e) => setFormat(e.target.value)}
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                autoFocus
+                onClick={() => handleClose("delete")}
+                color="secondary"
+              >
+                delete {selected}
+              </Button>
+              <Button autoFocus onClick={handleClose} color="primary">
+                Cancel
+              </Button>
 
-            <Button
-              onClick={() => handleClose("post")}
-              color="primary"
-              autoFocus
-            >
-              Create
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+              <Button
+                onClick={() => handleClose("post")}
+                color="primary"
+                autoFocus
+              >
+                Create
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      </main>
     </div>
   );
 }
