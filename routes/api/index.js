@@ -175,10 +175,9 @@ router.post("/find", (req, res, next) => {
 });
 
 // Get list of all files reverse sorted by date
-router.get("/sort", (req, res, next) => {
-  Directory.find({ isFolder: false }).sort({ datefield: 1 }, (err, files) => {
-    res.json({ success: !err ? true : false, data: err ? false : files });
-  });
+router.get("/sort", async (req, res, next) => {
+  const files = await Directory.find({ isFolder: false }).sort({ createdAt: 1 })
+    res.json({ files });
 });
 
 module.exports = router;

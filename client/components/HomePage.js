@@ -132,9 +132,9 @@ function HomePage(props) {
           _id: el._id,
           name: el.isFolder
             ? el.name
-            : el.name + el.format
-            ? +"." + el.format.toLowerCase()
-            : "",
+            : el.format
+            ? (el.name +'.'+ el.format.toLowerCase())
+            : "limit exceed",
           isFolder: el.isFolder,
           children: el.directory && el.directory[0] ? treeData(el, true) : [],
         };
