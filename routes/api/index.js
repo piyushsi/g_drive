@@ -10,6 +10,7 @@ router.post("/create", (req, res, next) => {
           { name, ishome: true, isFolder: true },
           (err, createdDirectory) => {
             if (err) return next(err);
+            res.json({ success: true });
           }
         )
       : Directory.create({ name, isFolder: true }, (err, createdDirectory) => {
