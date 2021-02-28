@@ -94,8 +94,7 @@ function HomePage(props) {
       size,
       id,
       type,
-    }).then((res) => console.log(res));
-    checkHome();
+    }).then((res) => checkHome());
   };
   const createHome = () => {
     Axios.post("/api/v1/create", {
@@ -103,8 +102,7 @@ function HomePage(props) {
       format: "folder",
       id: "home",
       type: "folder",
-    }).then((res) => console.log(res));
-    checkHome();
+    }).then((res) => checkHome());
   };
 
   const checkHome = () => {
@@ -122,7 +120,7 @@ function HomePage(props) {
         return {
           id: uid,
           _id: el._id,
-          name: el.isFolder  ? el.name : el.name + el.format? +"." +el.format.toLowerCase():'',
+          name: el.isFolder ? el.name : el.name + "." + el.format.toLowerCase(),
           isFolder: el.isFolder,
           children: el.directory && el.directory[0] ? treeData(el, true) : [],
         };
@@ -157,8 +155,7 @@ function HomePage(props) {
   const deleteDir = () => {
     Axios.post("/api/v1/delete", {
       id,
-    }).then((res) => console.log(res));
-    checkHome();
+    }).then((res) => checkHome());
   };
 
   useEffect(() => {
