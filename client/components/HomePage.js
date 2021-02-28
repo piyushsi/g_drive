@@ -103,8 +103,7 @@ function HomePage(props) {
       format: "folder",
       id: "home",
       type: "folder",
-    }).then((res) => console.log(res));
-    checkHome();
+    }).then((res) => checkHome());
   };
 
   const checkHome = () => {
