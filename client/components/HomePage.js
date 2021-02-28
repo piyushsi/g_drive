@@ -122,9 +122,9 @@ function HomePage(props) {
         return {
           id: uid,
           _id: el._id,
-          name: el.isFolder ? el.name : el.name + "." + el.format.toLowerCase(),
+          name: el.isFolder  ? el.name : el.name + el.format? +"." +el.format.toLowerCase():'',
           isFolder: el.isFolder,
-          children: el.directory[0] ? treeData(el, true) : [],
+          children: el.directory && el.directory[0] ? treeData(el, true) : [],
         };
       }),
     };
